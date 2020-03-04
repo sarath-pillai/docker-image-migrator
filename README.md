@@ -1,6 +1,6 @@
 # Migrate Docker images from one registry to another (WIP)
 
-Note: This is only tested against a source insecure registry running on port 80 and an authenticated target registry which is not insecure.
+Note: This is only tested against a source insecure registry running on port 80 and an authenticated target registry.
 
 ## Assumptions
 1. Source registry and destination registry authentication is configured on the system from where you fire this.
