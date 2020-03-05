@@ -2,12 +2,12 @@ from docker_registry_client import DockerRegistryClient as regclient
 import docker
 import json
 import fire 
-
+import urllib2
 
 def get_repos(src_registry_url):
     try:
-        print src_registry_url
-        repos = regclient(src_registry_url).repositories()
+        response = urllib2.urlopen(src_registry_url)
+        repos = json.loads(response.read())['repositories']
     except Exception as e:
         print("Error happend while getting repo list from registry "+e)
     return repos
@@ -69,10 +69,11 @@ def push_images(images_to_push):
 def startmigration(source_reg, destination_reg):
     source_reg = str(source_reg)
     destination_reg = str(destination_reg)
+    source_reg_catalogue = "http://"+source_reg+"/v2/_catalog?n=1000"
     source_reg_http = "http://"+source_reg
     source_reg_pull_push = source_reg+":80/"
     destination_reg_pull_push = destination_reg+"/"
-    repos = get_repos(source_reg_http)
+    repos = get_repos(source_reg_catalogue)
     repos_and_tags = get_tags(source_reg_http, repos)
     pull_images(source_reg_pull_push, repos_and_tags)
     images_to_push = tag_images(source_reg_pull_push, destination_reg_pull_push, repos_and_tags)
